@@ -54,6 +54,9 @@ DISCIPLINE (every time)
   not what was easiest to produce.
 ```
 
+## Code Demos
+
+- [Python](python)
 
 ## HTML Demos
 
