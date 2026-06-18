@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BONSAI WAVE 🌿 | Bonsai & Aquatic Plants Shop</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Bricolage Grotesque"', 'sans-serif'],
+            body: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            wave: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              900: '#14532d',
+            },
+            aqua: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+            },
+            lava: {
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+            },
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-slow': 'pulse 4s ease-in-out infinite',
+            'marquee': 'marquee 20s linear infinite',
+            'gradient': 'gradient 8s ease infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' },
+            },
+            gradient: {
+              '0%, 100%': { 'background-position': '0% 50%' },
+              '50%': { 'background-position': '100% 50%' },
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-display { font-family: 'Bricolage Grotesque', sans-serif; }
+    .hero-gradient {
+      background: linear-gradient(135deg, #14532d 0%, #0f766e 25%, #0891b2 50%, #06b6d4 75%, #22c55e 100%);
+      background-size: 300% 300%;
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #4ade80, #22d3ee, #f97316);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .card-glow:hover {
+      box-shadow: 0 0 40px rgba(34, 211, 238, 0.4), 0 0 80px rgba(34, 197, 94, 0.2);
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .noise::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+      opacity: 0.06;
+      pointer-events: none;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-wave-900 text-white overflow-x-hidden">
+
+  <!-- ===== MARQUEE BAR ===== -->
+  <div class="bg-lava-500 text-black py-2 overflow-hidden whitespace-nowrap font-bold text-sm tracking-wide">
+    <div class="inline-block animate-marquee">
+      <span class="mx-8">🔥 FREE SHIPPING ON ORDERS OVER $75</span>
+      <span class="mx-8">🌿 NEW BONSAI DROPS EVERY FRIDAY</span>
+      <span class="mx-8">🐠 AQUATIC PLANTS — FRESH FROM THE FARM</span>
+      <span class="mx-8">⚡ USE CODE WAVE10 FOR 10% OFF</span>
+      <span class="mx-8">🔥 FREE SHIPPING ON ORDERS OVER $75</span>
+      <span class="mx-8">🌿 NEW BONSAI DROPS EVERY FRIDAY</span>
+      <span class="mx-8">🐠 AQUATIC PLANTS — FRESH FROM THE FARM</span>
+      <span class="mx-8">⚡ USE CODE WAVE10 FOR 10% OFF</span>
+    </div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="sticky top-0 z-50 glass">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 font-display font-extrabold text-2xl">
+        <span class="text-3xl">🌿</span>
+        <span class="text-gradient">BONSAI WAVE</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 font-semibold text-sm">
+        <a href="#shop" class="hover:text-aqua-400 transition">Shop</a>
+        <a href="#bonsai" class="hover:text-aqua-400 transition">Bonsai</a>
+        <a href="#aquatic" class="hover:text-aqua-400 transition">Aquatic</a>
+        <a href="#care" class="hover:text-aqua-400 transition">Care Guides</a>
+        <a href="#about" class="hover:text-aqua-400 transition">About</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="hidden sm:flex items-center gap-2 text-sm font-semibold hover:text-aqua-400 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="relative flex items-center gap-2 bg-white text-wave-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-aqua-400 transition">
+          🛒 Cart
+          <span class="absolute -top-1 -right-1 bg-lava-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="relative hero-gradient animate-gradient noise overflow-hidden">
+    <!-- Floating decorative blobs -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-aqua-400/20 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-10 right-20 w-96 h-96 bg-wave-400/20 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+    <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-lava-400/10 rounded-full blur-3xl animate-float" style="animation-delay: 4s;"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 py-20 md:py-32 grid md:grid-cols-2 gap-12 items-center">
+      <!-- Left: Copy -->
+      <div>
+        <div class="inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-sm font-semibold mb-6">
+          <span class="w-2 h-2 bg-wave-400 rounded-full animate-pulse"></span>
+          LIVE DROP — 12 new species just landed
+        </div>
+        <h1 class="font-display font-extrabold text-5xl md:text-7xl leading-[1.05] mb-6">
+          GROW THE <span class="text-gradient">IMPOSSIBLE</span><br>
+          IN YOUR LIVING ROOM.
+        </h1>
+        <p class="text-lg md:text-xl text-white/80 mb-8 max-w-lg">
+          Hand-pruned bonsai trees and farm-fresh aquatic plants delivered to your door. Ancient art. Modern vibe. Zero gatekeeping.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="#shop" class="bg-white text-wave-900 px-8 py-4 rounded-full font-bold text-lg hover:scale-105 hover:bg-aqua-400 transition transform shadow-2xl shadow-aqua-500/30">
+            🌿 Shop the Drop
+          </a>
+          <a href="#care" class="glass px-8 py-4 rounded-full font-bold text-lg hover:bg-white/15 transition">
+            📖 Care Guides
+          </a>
+        </div>
+        <div class="flex items-center gap-6 mt-10 text-sm text-white/70">
+          <div class="flex items-center gap-2"><span class="text-2xl">⭐</span> 4.9/5 — 12,000+ reviews</div>
+          <div class="flex items-center gap-2"><span class="text-2xl">🚚</span> 2-day live delivery</div>
+        </div>
+      </div>
+
+      <!-- Right: Image collage -->
+      <div class="relative h-[400px] md:h-[500px]">
+        <div class="absolute top-0 left-0 w-3/5 rounded-3xl overflow-hidden shadow-2xl animate-float">
+          <img src="https://picsum.photos/500/600" alt="Bonsai tree" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute bottom-0 right-0 w-1/2 rounded-3xl overflow-hidden shadow-2xl animate-float" style="animation-delay: 1.5s;">
+          <img src="https://picsum.photos/400/400" alt="Aquatic plant" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute top-1/3 right-4 glass rounded-2xl px-5 py-3 animate-float" style="animation-delay: 3s;">
+          <div class="text-3xl font-display font-extrabold text-gradient">200+</div>
+          <div class="text-xs text-white/70">Species in stock</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wave divider -->
+    <svg class="absolute bottom-0 w-full" viewBox="0 0 1440 120" fill="none" preserveAspectRatio="none">
+      <path d="M0 120L60 105C120 90 240 60 360 55C480 50 600 70 720 75C840 80 960 70 1080 60C1200 50 1320 40 1380 35L1440 30V120H0Z" fill="#14532d"/>
+    </svg>
+  </section>
+
+  <!-- ===== CATEGORY STRIP ===== -->
+  <section class="bg-wave-900 py-12">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <a href="#bonsai" class="group relative rounded-2xl overflow-hidden h-40 card-glow transition">
+        <img src="https://picsum.photos/400/300" alt="Bonsai" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-wave-900 via-wave-900/40 to-transparent"></div>
+        <div class="absolute bottom-4 left-4">
+          <div class="text-2xl">🌳</div>
+          <div class="font-display font-bold text-xl">Bonsai Trees</div>
+          <div class="text-sm text-white/60">86 species</div>
+        </div>
+      </a>
+      <a href="#aquatic" class="group relative rounded-2xl overflow-hidden h-40 card-glow transition">
+        <img src="https://picsum.photos/400/300" alt="Aquatic" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-wave-900 via-wave-900/40 to-transparent"></div>
+        <div class="absolute bottom-4 left-4">
+          <div class="text-2xl">🐠</div>
+          <div class="font-display font-bold text-xl">Aquatic Plants</div>
+          <div class="text-sm text-white/60">64 species</div>
+        </div>
+      </a>
+      <a href="#shop" class="group relative rounded-2xl overflow-hidden h-40 card-glow transition">
+        <img src="https://picsum.photos/400/300" alt="Pots" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-wave-900 via-wave-900/40 to-transparent"></div>
+        <div class="absolute bottom-4 left-4">
+          <div class="text-2xl">🏺</div>
+          <div class="font-display font-bold text-xl">Pots & Soil</div>
+          <div class="text-sm text-white/60">120+ items</div>
+        </div>
+      </a>
+      <a href="#shop" class="group relative rounded-2xl overflow-hidden h-40 card-glow transition">
+        <img src="https://picsum.photos/400/300" alt="Tools" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-wave-900 via-wave-900/40 to-transparent"></div>
+        <div class="absolute bottom-4 left-4">
+          <div class="text-2xl">✂️</div>
+          <div class="font-display font-bold text-xl">Tools & Care</div>
+          <div class="text-sm text-white/60">45 items</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== BONSAI FEATURED ===== -->
+  <section id="bonsai" class="bg-wave-900 py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-end justify-between mb-10">
+        <div>
+          <div class="text-aqua-400 font-bold text-sm tracking-widest uppercase mb-2">🌳 Bonsai Collection</div>
+          <h2 class="font-display font-extrabold text-4xl md:text-5xl">Living Sculptures</h2>
+        </div>
+        <a href="#shop" class="hidden md:block text-sm font-bold text-aqua-400 hover:underline">View all →</a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Product Card 1 -->
+        <div class="group bg-wave-900/50 border border-white/10 rounded-3xl overflow-hidden card-glow transition">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://picsum.photos/400/500" alt="Juniper Bonsai" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+            <div class="absolute top-3 left-3 bg-lava-500 text-white text-xs font-bold px-3 py-1 rounded-full">🔥 BESTSELLER</div>
+            <button class="absolute top-3 right-3 w-9 h-9 glass rounded-full flex items-center justify-center hover:bg-lava-500 transition">♡</button>
+          </div>
+          <div class="p-5">
+            <div class="text-xs text-aqua-400 font-semibold mb-1">OUTDOOR</div>
+            <h3 class="font-display font-bold text-lg mb-1">Juniper Procumbens</h3>
+            <div class="flex items-center gap-1 text-sm text-white/60 mb-3">
+              <span>⭐⭐⭐⭐⭐</span> <span>(842)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="font-display font-extrabold text-2xl text-gradient">$89</div>
+              <button class="bg-white text-wave-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-aqua-400 transition">Add 🛒</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Card 2 -->
+        <div class="group bg-wave-900/50 border border-white/10 rounded-3xl overflow-hidden card-glow transition">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://picsum.photos/400/500" alt="Ficus Bonsai" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+            <div class="absolute top-3 left-3 bg-aqua-500 text-white text-xs font-bold px-3 py-1 rounded-full">✨ NEW</div>
+            <button class="absolute top-3 right-3 w-9 h-9 glass rounded-full flex items-center justify-center hover:bg-lava-500 transition">♡</button>
+          </div>
+          <div class="p-5">
+            <div class="text-xs text-aqua-400 font-semibold mb-1">INDOOR</div>
+            <h3 class="font-display font-bold text-lg mb-1">Ficus Retusa 'Ginseng'</h3>
+            <div class="flex items-center gap-1 text-sm text-white/60 mb-3">
+              <span>⭐⭐⭐⭐⭐</span> <span>(531)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="font-display font-extrabold text-2xl text-gradient">$64</div>
+              <button class="bg-white text-wave-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-aqua-400 transition">Add 🛒</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Card 3 -->
+        <div class="group bg-wave-900/50 border border-white/10 rounded-3xl overflow-hidden card-glow transition">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://picsum.photos/400/500" alt="Maple Bonsai" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+            <div class="absolute top-3 left-3 bg-wave-500 text-white text-xs font-bold px-3 py-1 rounded-full">🌿 RARE</div>
+            <button class="absolute top-3 right-3 w-9 h-9 glass rounded-full flex items-center justify-center hover:bg-lava-500 transition">♡</button>
+          </div>
+          <div class="p-5">
+            <div class="text-xs text-aqua-400 font-semibold mb-1">OUTDOOR</div>
+            <h3 class="font-display font-bold text-lg mb-1">Japanese Maple 'Deshojo'</h3>
+            <div class="flex items-center gap-1 text-sm text-white/60 mb-3">
+              <span>⭐⭐⭐⭐⭐</span> <span>(218)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="font-display font-extrabold text-2xl text-gradient">$145</div>
+              <button class="bg-white text-wave-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-aqua-400 transition">Add 🛒</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Card 4 -->
+        <div class="group bg-wave-900/50 border border-white/10 rounded-3xl overflow-hidden card-glow transition">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://picsum.photos/400/500" alt="Pine Bonsai" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+            <div class="absolute top-3 left-3 bg-lava-500 text-white text-xs font-bold px-3 py-1 rounded-full">🔥 BESTSELLER</div>
+            <button class="absolute top-3 right-3 w-9 h-9 glass rounded-full flex items-center justify-center hover:bg-lava-500 transition">♡</button>
+          </div>
+          <div class="p-5">
+            <div class="text-xs text-aqua-400 font-semibold mb-1">OUTDOOR</div>
+            <h3 class="font-display font-bold text-lg mb-1">Black Pine 'Mikawa'</h3>
+            <div class="flex items-center gap-1 text-sm text-white/60 mb-3">
+              <span>⭐⭐⭐⭐⭐</span> <span>(397)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="font-display font-extrabold text-2xl text-gradient">$112</div>
+              <button class="bg-white text-wave-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-aqua-400 transition">Add 🛒</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AQUATIC PLANTS ===== -->
+  <section id="aquatic" class="relative py-20 overflow-hidden">
+    <!-- Background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-aqua-600 via-wave-900 to-wave-900"></div>
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-aqua-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-wave-500/20 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6">
+      <div class="flex items-end justify-between mb-10">
+        <div>
+          <div class="text-aqua-400 font-bold text-sm tracking-widest uppercase mb-2">🐠 Aquatic Collection</div>
+          <h2 class="font-display font-extrabold text-4xl md:text-5xl">Underwater Gardens</h2>
+        </div>
+        <a href="#shop" class="hidden md:block text-sm font-bold text-aqua-400 hover:underline">View all →</a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Aquatic Card 1 -->
+        <div class="group glass rounded-3xl overflow-hidden card-glow transition">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://picsum.photos/400/500" alt="Anubias" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+            <div class="absolute top-3 left-3 bg-aqua-500 text-white text-xs font-bold px-3 py-1 rounded-full">✨ NEW</div>
+          </div>
+          <div class="p-5">
+            <div class="text-xs text-aqua-400 font-semibold mb-1">LOW LIGHT</div>
+            <h3 class="font-display font-bold text-lg mb-1">Anubias Nana 'Petite'</h3>
+            <div class="flex items-center gap-1 text-sm text-white/60 mb-3">
+              <span>⭐⭐⭐⭐⭐</span> <span>(612)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="font-display font-extrabold text-2xl text-gradient">$12</div>
+              <button class="bg-white text-wave-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-aqua-400 transition">Add 🛒</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aquatic Card 2 -->
+        <div class="group glass rounded-3xl overflow-hidden card-glow transition">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://picsum.photos/400/500" alt="Java Fern" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+            <div class="absolute top-3 left-3 bg-lava-500 text-white text-xs font-bold px-3 py-1 rounded-full">🔥 BESTSELLER</div>
+          </div>
+          <div class="p-5">
+            <div class="text-xs text-aqua-400 font-semibold mb-1">BEGINNER</div>
+            <h3 class="font-display font-bold text-lg mb-1">Java Fern 'Trident'</h3>
+            <div class="flex items-center gap-1 text-sm text-white/60 mb-3">
+              <span>⭐⭐⭐⭐⭐</span> <span>(1,204)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="font-display font-extrabold text-2xl text-gradient">$8</div>
+              <button class="bg-white text-wave-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-aqua-400 transition">Add 🛒</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aquatic Card 3 -->
+        <div class="group glass rounded-3xl overflow-hidden card-glow transition">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://picsum.photos/400/500" alt="Dwarf Hairgrass" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+            <div class="absolute top-3 left-3 bg-wave-500 text-white text-xs font-bold px-3 py-1 rounded-full">🌿 RARE</div>
+          </div>
+          <div class="p-5">
+            <div class="text-xs text-aqua-400 font-semibold mb-1">CARPET PLANT</div>
+            <h3 class="font-display font-bold text-lg mb-1">Dwarf Hairgrass 'Mini'</h3>
+            <div class="flex items-center gap-1 text-sm text-white/60 mb-3">
+              <span>⭐⭐⭐⭐⭐</span> <span>(345)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="font-display font-extrabold text-2xl text-gradient">$15</div>
+              <button class="bg-white text-wave-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-aqua-400 transition">Add 🛒</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aquatic Card 4 -->
+        <div class="group glass rounded-3xl overflow-hidden card-glow transition">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://picsum.photos/400/500" alt="Red Ludwigia" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+            <div class="absolute top-3 left-3 bg-lava-500 text-white text-xs font-bold px-3 py-1 rounded-full">🔥 BESTSELLER</div>
+          </div>
+          <div class="p-5">
+            <div class="text-xs text-aqua-400 font-semibold mb-1">HIGH LIGHT</div>
+            <h3 class="font-display font-bold text-lg mb-1">Red Ludwigia 'Super Red'</h3>
+            <div class="flex items-center gap-1 text-sm text-white/60 mb-3">
+              <span>⭐⭐⭐⭐⭐</span> <span>(489)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="font-display font-extrabold text-2xl text-gradient">$18</div>
+              <button class="bg-white text-wave-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-aqua-400 transition">Add 🛒</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROMO BANNER ===== -->
+  <section class="bg-wave-900 py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="relative rounded-[2.5rem] overflow-hidden noise">
+        <img src="https://picsum.photos/1400/500" alt="Promo" class="w-full h-80 md:h-96 object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-wave-900 via-wave-900/80 to-transparent"></div>
+        <div class="absolute inset-0 flex items-center">
+          <div class="p-8 md:p-16 max-w-xl">
+            <div class="text-aqua-400 font-bold text-sm tracking-widest uppercase mb-3">⚡ FLASH SALE</div>
+            <h2 class="font-display font-extrabold text-4xl md:text-6xl mb-4 leading-tight">
+              30% OFF<br>
+              <span class="text-gradient">STARTER KITS</span>
+            </h2>
+            <p class="text-white/70 text-lg mb-6">Everything you need to begin your bonsai or aquascape journey. Limited stock — ends Sunday.</p>
+            <div class="flex items-center gap-4">
+              <a href="#shop" class="bg-lava-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:scale-105 hover:bg-lava-600 transition transform shadow-2xl shadow-lava-500/30">
+                Grab Yours ⚡
+              </a>
+              <div class="flex gap-2">
+                <div class="glass rounded-xl px-4 py-2 text-center">
+                  <div class="font-display font-extrabold text-2xl" id="hours">12</div>
+                  <div class="text-xs text-white/60">HRS</div>
+                </div>
+                <div class="glass rounded-xl px-4 py-2 text-center">
+                  <div class="font-display font-extrabold text-2xl" id="minutes">45</div>
+                  <div class="text-xs text-white/60">MIN</div>
+                </div>
+                <div class="glass rounded-xl px-4 py-2 text-center">
+                  <div class="font-display font-extrabold text-2xl" id="seconds">30</div>
+                  <div class="text-xs text-white/60">SEC</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CARE GUIDES / BLOG ===== -->
+  <section id="care" class="bg-wave-900 py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <div class="text-aqua-400 font-bold text-sm tracking-widest uppercase mb-2">📖 Learn</div>
+        <h2 class="font-display font-extrabold text-4xl md:text-5xl">Master the Art</h2>
+        <p class="text-white/60 mt-3 max-w-2xl mx-auto">Free guides from world-class growers. No fluff, just real techniques that work.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <article class="group cursor-pointer">
+          <div class="rounded-3xl overflow-hidden mb-4 card-glow transition">
+            <img src="https://picsum.photos/600/400" alt="Guide 1" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="text-xs text-aqua-400 font-bold mb-2">BONSAI · 8 MIN READ</div>
+          <h3 class="font-display font-bold text-2xl mb-2 group-hover:text-aqua-400 transition">The Complete Beginner's Guide to Pruning Your First Bonsai</h3>
+          <p class="text-white/60">Stop killing your trees. Here's the exact pruning schedule pros use, broken down step by step.</p>
+        </article>
+        <article class="group cursor-pointer">
+          <div class="rounded-3xl overflow-hidden mb-4 card-glow transition">
+            <img src="https://picsum.photos/600/400" alt="Guide 2" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="text-xs text-aqua-400 font-bold mb-2">AQUATIC · 6 MIN READ</div>
+          <h3 class="font-display font-bold text-2xl mb-2 group-hover:text-aqua-400 transition">Aquascaping 101: Build a Lush Carpet in 30 Days</h3>
+          <p class="text-white/60">The substrate, light, and CO2 formula that turns bare tanks into green paradises — fast.</p>
+        </article>
+        <article class="group cursor-pointer">
+          <div class="rounded-3xl overflow-hidden mb-4 card-glow transition">
+            <img src="https://picsum.photos/600/400" alt="Guide 3" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="text-xs text-aqua-400 font-bold mb-2">CARE · 5 MIN READ</div>
+          <h3 class="font-display font-bold text-2xl mb-2 group-hover:text-aqua-400 transition">Watering Secrets: Why 90% of Beginners Overwater</h3>
+          <p class="text-white/60">The chopstick trick, the finger test, and the one tool that saves more plants than anything else.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="bg-gradient-to-b from-wave-900 to-aqua-600/20 py-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <div class="text-aqua-400 font-bold text-sm tracking-widest uppercase mb-2">💬 Reviews</div>
+        <h2 class="font-display font-extrabold text-4xl md:text-5xl">12,000+ Happy Growers</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="glass rounded-3xl p-8">
+          <div class="text-4xl mb-4">⭐⭐⭐⭐⭐</div>
+          <p class="text-white/80 text-lg mb-6">"My Juniper arrived in perfect condition — packaging was insane, like unboxing a luxury watch. Tree is thriving 6 months later."</p>
+          <div class="flex items-center gap-3">
+            <img src="https://picsum.photos/80/80" alt="Avatar" class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <div class="font-bold">Marcus T.</div>
+              <div class="text-sm text-white/50">Verified Buyer</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass rounded-3xl p-8">
+          <div class="text-4xl mb-4">⭐⭐⭐⭐⭐</div>
+          <p class="text-white/80 text-lg mb-6">"The aquatic plant selection is unreal. My Red Ludwigia came so red it looks fake. My shrimp are obsessed."</p>
+          <div class="flex items-center gap-3">
+            <img src="https://picsum.photos/80/80" alt="Avatar" class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <div class="font-bold">Priya K.</div>
+              <div class="text-sm text-white/50">Verified Buyer</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass rounded-3xl p-8">
+          <div class="text-4xl mb-4">⭐⭐⭐⭐⭐</div>
+          <p class="text-white/80 text-lg mb-6">"Care guides alone are worth the price. I went from killing every plant to a thriving indoor jungle. These people know their stuff."</p>
+          <div class="flex items-center gap-3">
+            <img src="https://picsum.photos/80/80" alt="Avatar" class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <div class="font-bold">Diego R.</div>
+              <div class="text-sm text-white/50">Verified Buyer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NEWSLETTER ===== -->
+  <section class="bg-wave-900 py-20">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <div class="text-5xl mb-4">🌱</div>
+      <h2 class="font-display font-extrabold text-4xl md:text-5xl mb-4">Join the <span class="text-gradient">Wave</span></h2>
+      <p class="text-white/60 text-lg mb-8">Get early access to drops, exclusive deals, and weekly care tips. No spam — just plants.</p>
+      <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onsubmit="event.preventDefault(); alert('Welcome to the Wave! 🌿');">
+        <input type="email" required placeholder="your@email.com" class="flex-1 bg-white/10 border border-white/20 rounded-full px-6 py-4 text-white placeholder-white/40 focus:outline-none focus:border-aqua-400 transition">
+        <button type="submit" class="bg-gradient-to-r from-wave-500 to-aqua-500 px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition transform shadow-xl shadow-aqua-500/20 whitespace-nowrap">
+          Subscribe 🚀
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="about" class="bg-wave-900 border-t border-white/10 pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-5 gap-8 mb-12">
+        <div class="md:col-span-2">
+          <a href="#" class="flex items-center gap-2 font-display font-extrabold text-2xl mb-4">
+            <span class="text-3xl">🌿</span>
+            <span class="text-gradient">BONSAI WAVE</span>
+          </a>
+          <p class="text-white/60 max-w-sm">Hand-pruned bonsai trees and farm-fresh aquatic plants. Ancient art, modern delivery. Growing since 2018.</p>
+          <div class="flex gap-3 mt-6">
+            <a href="#" class="w-10 h-10 glass rounded-full flex items-center justify-center hover:bg-aqua-500 transition">📷</a>
+            <a href="#" class="w-10 h-10 glass rounded-full flex items-center justify-center hover:bg-aqua-500 transition">🐦</a>
+            <a href="#" class="w-10 h-10 glass rounded-full flex items-center justify-center hover:bg-aqua-500 transition">▶️</a>
+            <a href="#" class="w-10 h-10 glass rounded-full flex items-center justify-center hover:bg-aqua-500 transition">📌</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">Shop</h4>
+          <ul class="space-y-2 text-white/60 text-sm">
+            <li><a href="#bonsai" class="hover:text-aqua-400 transition">Bonsai Trees</a></li>
+            <li><a href="#aquatic" class="hover:text-aqua-400 transition">Aquatic Plants</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">Pots & Soil</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">Tools</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">Gift Cards</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">Learn</h4>
+          <ul class="space-y-2 text-white/60 text-sm">
+            <li><a href="#care" class="hover:text-aqua-400 transition">Care Guides</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">Beginner's Guide</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">Blog</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">Workshops</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">Support</h4>
+          <ul class="space-y-2 text-white/60 text-sm">
+            <li><a href="#" class="hover:text-aqua-400 transition">Contact Us</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">Shipping Info</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">Returns</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">FAQ</a></li>
+            <li><a href="#" class="hover:text-aqua-400 transition">Track Order</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/40">
+        <div>© 2024 Bonsai Wave. All rights reserved. 🌿</div>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-aqua-400 transition">Privacy Policy</a>
+          <a href="#" class="hover:text-aqua-400 transition">Terms of Service</a>
+          <a href="#" class="hover:text-aqua-400 transition">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // Countdown timer
+    function updateCountdown() {
+      const h = document.getElementById('hours');
+      const m = document.getElementById('minutes');
+      const s = document.getElementById('seconds');
+      if (!h || !m || !s) return;
+
+      let hours = parseInt(h.textContent);
+      let minutes = parseInt(m.textContent);
+      let seconds = parseInt(s.textContent);
+
+      seconds--;
+      if (seconds < 0) { seconds = 59; minutes--; }
+      if (minutes < 0) { minutes = 59; hours--; }
+      if (hours < 0) { hours = 23; }
+
+      h.textContent = String(hours).padStart(2, '0');
+      m.textContent = String(minutes).padStart(2, '0');
+      s.textContent = String(seconds).padStart(2, '0');
+    }
+    setInterval(updateCountdown, 1000);
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  </script>
+</body>
+</html>
