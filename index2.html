@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vinyl — Vintage Music Streaming</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sepia: #d4b896;
+      --cream: #f5ecd9;
+      --paper: #ede0c8;
+      --brown: #3e2c1c;
+      --rust: #b85c38;
+      --gold: #c9a227;
+      --deep: #2a1f14;
+    }
+
+    * { font-family: 'Inter', sans-serif; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--deep);
+    }
+
+    .font-display { font-family: 'Playfair Display', serif; }
+    .font-serif-d { font-family: 'DM+Serif+Display', serif; }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Sepia filter for images */
+    .img-vintage {
+      filter: sepia(0.35) contrast(0.95) saturate(0.85) brightness(0.95);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--paper); }
+    ::-webkit-scrollbar-thumb { background: var(--brown); border-radius: 4px; }
+
+    /* Vinyl spin animation */
+    @keyframes spin-vinyl {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .vinyl-spin { animation: spin-vinyl 8s linear infinite; }
+
+    /* Marquee for now-playing */
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .marquee { animation: marquee 15s linear infinite; }
+
+    .wax-seal {
+      background: var(--rust);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3), inset -3px -3px 8px rgba(0,0,0,0.2), inset 3px 3px 8px rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+
+    .card-paper {
+      background: var(--paper);
+      box-shadow: 0 1px 3px rgba(62,44,28,0.15), 0 4px 12px rgba(62,44,28,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-paper:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(62,44,28,0.2), 0 8px 24px rgba(62,44,28,0.12);
+    }
+
+    .divider-dashed {
+      border-top: 1px dashed var(--brown);
+      opacity: 0.3;
+    }
+
+    .btn-vintage {
+      background: var(--brown);
+      color: var(--cream);
+      transition: all 0.2s ease;
+    }
+    .btn-vintage:hover { background: var(--deep); }
+
+    .tab-active {
+      border-bottom: 2px solid var(--rust);
+      color: var(--rust);
+    }
+
+    .equalizer-bar {
+      display: inline-block;
+      width: 3px;
+      background: var(--rust);
+      margin: 0 1px;
+      border-radius: 1px;
+    }
+    @keyframes eq {
+      0%, 100% { height: 6px; }
+      50% { height: 16px; }
+    }
+    .eq-1 { animation: eq 0.8s ease-in-out infinite; }
+    .eq-2 { animation: eq 0.6s ease-in-out infinite 0.2s; }
+    .eq-3 { animation: eq 0.7s ease-in-out infinite 0.1s; }
+    .eq-4 { animation: eq 0.9s ease-in-out infinite 0.3s; }
+
+    .sidebar-item {
+      transition: all 0.15s ease;
+      border-left: 3px solid transparent;
+    }
+    .sidebar-item:hover {
+      background: rgba(62,44,28,0.06);
+      border-left-color: var(--rust);
+    }
+    .sidebar-item.active {
+      background: rgba(62,44,28,0.08);
+      border-left-color: var(--rust);
+      color: var(--rust);
+    }
+
+    .badge-gold {
+      background: var(--gold);
+      color: var(--deep);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 4px;
+      background: var(--brown);
+      opacity: 0.3;
+      border-radius: 2px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      background: var(--rust);
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid var(--cream);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body class="min-h-screen overflow-hidden">
+
+  <!-- ============ TOP NAV ============ -->
+  <header class="bg-[#3e2c1c] text-[#f5ecd9] px-6 py-3 flex items-center justify-between shadow-lg z-20 relative">
+    <div class="flex items-center gap-3">
+      <!-- Vinyl logo -->
+      <div class="w-10 h-10 rounded-full bg-[#1a1410] border-2 border-[#c9a227] flex items-center justify-center relative">
+        <div class="w-3 h-3 rounded-full bg-[#b85c38]"></div>
+        <div class="absolute inset-1 rounded-full border border-[#c9a227] opacity-30"></div>
+        <div class="absolute inset-2 rounded-full border border-[#c9a227] opacity-20"></div>
+      </div>
+      <div>
+        <h1 class="font-display text-2xl font-bold tracking-wide leading-none">Vinyl</h1>
+        <p class="text-[10px] tracking-[0.3em] uppercase text-[#d4b896]">Est. 1948</p>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="flex-1 max-w-md mx-8 hidden md:block">
+      <div class="relative">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#d4b896]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search records, artists, genres…" class="w-full bg-[#2a1f14] border border-[#d4b896]/20 rounded-full pl-10 pr-4 py-2 text-sm text-[#f5ecd9] placeholder-[#d4b896]/50 focus:outline-none focus:border-[#c9a227]/50 transition">
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="flex items-center gap-4">
+      <button class="text-[#d4b896] hover:text-[#c9a227] transition text-sm font-medium hidden sm:block">Sign In</button>
+      <div class="w-9 h-9 rounded-full border-2 border-[#c9a227] overflow-hidden">
+        <img src="https://picsum.photos/80/80" class="w-full h-full object-cover img-vintage" alt="Profile">
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ MAIN LAYOUT ============ -->
+  <div class="flex h-[calc(100vh-64px)]">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-64 bg-[#ede0c8] border-r border-[#3e2c1c]/15 flex flex-col flex-shrink-0">
+      <div class="p-4 flex-1 overflow-y-auto">
+        <p class="text-[10px] font-bold tracking-[0.2em] uppercase text-[#3e2c1c]/50 mb-3 px-2">Browse</p>
+        <nav class="space-y-1 mb-6">
+          <a class="sidebar-item active flex items-center gap-3 px-3 py-2 rounded-r text-sm font-medium" href="#">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
+            Home
+          </a>
+          <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-r text-sm font-medium" href="#">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Discover
+          </a>
+          <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-r text-sm font-medium" href="#">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Library
+          </a>
+          <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-r text-sm font-medium" href="#">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 18V5l12-2v13M9 9l12-2M6 18a3 3 0 1 1-3-3 3 3 0 0 1 3 3zM18 16a3 3 0 1 1-3-3 3 3 0 0 1 3 3z"/></svg>
+            Radio
+          </a>
+        </nav>
+
+        <div class="divider-dashed mb-4"></div>
+
+        <p class="text-[10px] font-bold tracking-[0.2em] uppercase text-[#3e2c1c]/50 mb-3 px-2">Your Collection</p>
+        <nav class="space-y-1 mb-6">
+          <a class="sidebar-item flex items-center justify-between px-3 py-2 rounded-r text-sm" href="#">
+            <span class="flex items-center gap-3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2"/></svg>
+              Liked Songs
+            </span>
+            <span class="text-xs text-[#b85c38] font-bold">247</span>
+          </a>
+          <a class="sidebar-item flex items-center justify-between px-3 py-2 rounded-r text-sm" href="#">
+            <span class="flex items-center gap-3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+              Playlists
+            </span>
+            <span class="text-xs text-[#3e2c1c]/40">12</span>
+          </a>
+          <a class="sidebar-item flex items-center justify-between px-3 py-2 rounded-r text-sm" href="#">
+            <span class="flex items-center gap-3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+              Albums
+            </span>
+            <span class="text-xs text-[#3e2c1c]/40">34</span>
+          </a>
+          <a class="sidebar-item flex items-center justify-between px-3 py-2 rounded-r text-sm" href="#">
+            <span class="flex items-center gap-3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Artists
+            </span>
+            <span class="text-xs text-[#3e2c1c]/40">18</span>
+          </a>
+        </nav>
+
+        <div class="divider-dashed mb-4"></div>
+
+        <p class="text-[10px] font-bold tracking-[0.2em] uppercase text-[#3e2c1c]/50 mb-3 px-2">Recent Playlists</p>
+        <nav class="space-y-2">
+          <a class="flex items-center gap-3 px-2 py-1.5 hover:bg-[#3e2c1c]/5 rounded cursor-pointer" href="#">
+            <img src="https://picsum.photos/40/40" class="w-8 h-8 rounded img-vintage" alt="">
+            <div class="min-w-0">
+              <p class="text-xs font-medium truncate">Midnight Jazz</p>
+              <p class="text-[10px] text-[#3e2c1c]/40">52 tracks</p>
+            </div>
+          </a>
+          <a class="flex items-center gap-3 px-2 py-1.5 hover:bg-[#3e2c1c]/5 rounded cursor-pointer" href="#">
+            <img src="https://picsum.photos/40/41" class="w-8 h-8 rounded img-vintage" alt="">
+            <div class="min-w-0">
+              <p class="text-xs font-medium truncate">Sunday Soul</p>
+              <p class="text-[10px] text-[#3e2c1c]/40">38 tracks</p>
+            </div>
+          </a>
+          <a class="flex items-center gap-3 px-2 py-1.5 hover:bg-[#3e2c1c]/5 rounded cursor-pointer" href="#">
+            <img src="https://picsum.photos/40/42" class="w-8 h-8 rounded img-vintage" alt="">
+            <div class="min-w-0">
+              <p class="text-xs font-medium truncate">Old Country Roads</p>
+              <p class="text-[10px] text-[#3e2c1c]/40">61 tracks</p>
+            </div>
+          </a>
+          <a class="flex items-center gap-3 px-2 py-1.5 hover:bg-[#3e2c1c]/5 rounded cursor-pointer" href="#">
+            <img src="https://picsum.photos/40/43" class="w-8 h-8 rounded img-vintage" alt="">
+            <div class="min-w-0">
+              <p class="text-xs font-medium truncate">Doo-Wop Delight</p>
+              <p class="text-[10px] text-[#3e2c1c]/40">24 tracks</p>
+            </div>
+          </a>
+          <a class="flex items-center gap-3 px-2 py-1.5 hover:bg-[#3e2c1c]/5 rounded cursor-pointer" href="#">
+            <img src="https://picsum.photos/40/44" class="w-8 h-8 rounded img-vintage" alt="">
+            <div class="min-w-0">
+              <p class="text-xs font-medium truncate">Swing Era Gold</p>
+              <p class="text-[10px] text-[#3e2c1c]/40">45 tracks</p>
+            </div>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Sidebar footer -->
+      <div class="p-4 border-t border-[#3e2c1c]/15">
+        <button class="w-full btn-vintage rounded-full py-2 text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          New Playlist
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto bg-[#f5ecd9]">
+      <div class="p-6 md:p-8">
+
+        <!-- Greeting + date -->
+        <div class="flex items-end justify-between mb-8 flex-wrap gap-4">
+          <div>
+            <p class="text-xs tracking-[0.2em] uppercase text-[#3e2c1c]/50 mb-1">Good evening, friend</p>
+            <h2 class="font-display text-4xl font-bold text-[#3e2c1c]">What's on the turntable?</h2>
+          </div>
+          <div class="flex items-center gap-2 text-sm text-[#3e2c1c]/60">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <span class="font-medium">Thursday, Dec 19</span>
+          </div>
+        </div>
+
+        <!-- ===== FEATURED HERO ===== -->
+        <section class="mb-10 relative overflow-hidden rounded-lg card-paper">
+          <div class="flex flex-col md:flex-row">
+            <div class="md:w-2/5 relative">
+              <img src="https://picsum.photos/600/400" class="w-full h-64 md:h-full object-cover img-vintage" alt="Featured Album">
+              <div class="absolute top-4 left-4 wax-seal w-14 h-14 flex items-center justify-center">
+                <span class="font-display text-[#f5ecd9] text-xs font-bold leading-tight text-center">FEATURED<br>LP</span>
+              </div>
+            </div>
+            <div class="md:w-3/5 p-6 md:p-8 flex flex-col justify-center">
+              <span class="text-xs tracking-[0.2em] uppercase text-[#b85c38] font-bold mb-2">Album of the Week</span>
+              <h3 class="font-display text-3xl md:text-4xl font-bold text-[#3e2c1c] mb-2">Midnight Serenade</h3>
+              <p class="text-[#3e2c1c]/60 text-sm mb-4">by Ella & The Midnight Trio — 1958</p>
+              <p class="text-sm text-[#3e2c1c]/70 leading-relaxed mb-6 max-w-md">
+                A timeless collection of smoky ballads and late-night grooves. Each track is a masterclass in mood, from the opening notes to the final whisper of the needle lifting.
+              </p>
+              <div class="flex items-center gap-4">
+                <button class="btn-vintage rounded-full px-6 py-2.5 text-sm font-bold tracking-wider uppercase flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  Play Album
+                </button>
+                <button class="border-2 border-[#3e2c1c] text-[#3e2c1c] rounded-full px-6 py-2 text-sm font-bold tracking-wider uppercase hover:bg-[#3e2c1c] hover:text-[#f5ecd9] transition flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== QUICK ACCESS TILES ===== -->
+        <section class="mb-10">
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <!-- Tile 1 -->
+            <a class="card-paper rounded-lg overflow-hidden cursor-pointer group">
+              <div class="relative">
+                <img src="https://picsum.photos/300/300" class="w-full aspect-square object-cover img-vintage" alt="">
+                <div class="absolute inset-0 bg-[#3e2c1c]/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                  <div class="w-12 h-12 rounded-full bg-[#b85c38] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#f5ecd9]" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Daily Mix No. 1</p>
+                <p class="text-xs text-[#3e2c1c]/50">Jazz · Soul · Blues</p>
+              </div>
+            </a>
+            <!-- Tile 2 -->
+            <a class="card-paper rounded-lg overflow-hidden cursor-pointer group">
+              <div class="relative">
+                <img src="https://picsum.photos/300/301" class="w-full aspect-square object-cover img-vintage" alt="">
+                <div class="absolute inset-0 bg-[#3e2c1c]/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                  <div class="w-12 h-12 rounded-full bg-[#b85c38] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#f5ecd9]" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Chill Evening</p>
+                <p class="text-xs text-[#3e2c1c]/50">Lounge · Easy Listening</p>
+              </div>
+            </a>
+            <!-- Tile 3 -->
+            <a class="card-paper rounded-lg overflow-hidden cursor-pointer group">
+              <div class="relative">
+                <img src="https://picsum.photos/300/302" class="w-full aspect-square object-cover img-vintage" alt="">
+                <div class="absolute inset-0 bg-[#3e2c1c]/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                  <div class="w-12 h-12 rounded-full bg-[#b85c38] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#f5ecd9]" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Golden Oldies</p>
+                <p class="text-xs text-[#3e2c1c]/50">50s · 60s Hits</p>
+              </div>
+            </a>
+            <!-- Tile 4 -->
+            <a class="card-paper rounded-lg overflow-hidden cursor-pointer group">
+              <div class="relative">
+                <img src="https://picsum.photos/300/303" class="w-full aspect-square object-cover img-vintage" alt="">
+                <div class="absolute inset-0 bg-[#3e2c1c]/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                  <div class="w-12 h-12 rounded-full bg-[#b85c38] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#f5ecd9]" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Vinyl Discoveries</p>
+                <p class="text-xs text-[#3e2c1c]/50">New to You</p>
+              </div>
+            </a>
+            <!-- Tile 5 -->
+            <a class="card-paper rounded-lg overflow-hidden cursor-pointer group">
+              <div class="relative">
+                <img src="https://picsum.photos/300/304" class="w-full aspect-square object-cover img-vintage" alt="">
+                <div class="absolute inset-0 bg-[#3e2c1c]/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                  <div class="w-12 h-12 rounded-full bg-[#b85c38] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#f5ecd9]" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">On Repeat</p>
+                <p class="text-xs text-[#3e2c1c]/50">Your top tracks</p>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <!-- ===== RECENTLY PLAYED ===== -->
+        <section class="mb-10">
+          <div class="flex items-center justify-between mb-5">
+            <h3 class="font-display text-2xl font-bold text-[#3e2c1c]">Recently Played</h3>
+            <a class="text-xs tracking-wider uppercase text-[#b85c38] font-bold hover:underline cursor-pointer">View All</a>
+          </div>
+          <div class="card-paper rounded-lg overflow-hidden">
+            <!-- Track row -->
+            <div class="flex items-center gap-4 px-4 py-3 hover:bg-[#3e2c1c]/5 cursor-pointer transition border-b border-[#3e2c1c]/8">
+              <span class="text-xs font-bold text-[#3e2c1c]/40 w-6 text-center">01</span>
+              <img src="https://picsum.photos/60/60" class="w-12 h-12 rounded img-vintage flex-shrink-0" alt="">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Blue Moon Serenade</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">Ella & The Midnight Trio</p>
+              </div>
+              <div class="hidden md:block text-xs text-[#3e2c1c]/40 w-32 truncate">Midnight Serenade</div>
+              <span class="text-xs text-[#3e2c1c]/40">3:42</span>
+              <button class="text-[#3e2c1c]/40 hover:text-[#b85c38] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="flex items-center gap-4 px-4 py-3 hover:bg-[#3e2c1c]/5 cursor-pointer transition border-b border-[#3e2c1c]/8">
+              <span class="text-xs font-bold text-[#3e2c1c]/40 w-6 text-center">02</span>
+              <img src="https://picsum.photos/60/61" class="w-12 h-12 rounded img-vintage flex-shrink-0" alt="">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Smoke Gets In Your Eyes</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">The Platters</p>
+              </div>
+              <div class="hidden md:block text-xs text-[#3e2c1c]/40 w-32 truncate">Golden Decade</div>
+              <span class="text-xs text-[#3e2c1c]/40">2:38</span>
+              <button class="text-[#3e2c1c]/40 hover:text-[#b85c38] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="flex items-center gap-4 px-4 py-3 hover:bg-[#3e2c1c]/5 cursor-pointer transition border-b border-[#3e2c1c]/8 bg-[#b85c38]/5">
+              <span class="text-xs font-bold text-[#b85c38] w-6 text-center flex items-center justify-center gap-0.5">
+                <span class="equalizer-bar eq-1"></span>
+                <span class="equalizer-bar eq-2"></span>
+                <span class="equalizer-bar eq-3"></span>
+              </span>
+              <img src="https://picsum.photos/60/62" class="w-12 h-12 rounded img-vintage flex-shrink-0" alt="">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-[#b85c38] truncate">Fly Me To The Moon</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">Frank Sinatra</p>
+              </div>
+              <div class="hidden md:block text-xs text-[#3e2c1c]/40 w-32 truncate">Sinatra Sings</div>
+              <span class="text-xs text-[#3e2c1c]/40">2:28</span>
+              <button class="text-[#b85c38]">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="flex items-center gap-4 px-4 py-3 hover:bg-[#3e2c1c]/5 cursor-pointer transition border-b border-[#3e2c1c]/8">
+              <span class="text-xs font-bold text-[#3e2c1c]/40 w-6 text-center">04</span>
+              <img src="https://picsum.photos/60/63" class="w-12 h-12 rounded img-vintage flex-shrink-0" alt="">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Georgia On My Mind</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">Ray Charles</p>
+              </div>
+              <div class="hidden md:block text-xs text-[#3e2c1c]/40 w-32 truncate">The Genius Hits</div>
+              <span class="text-xs text-[#3e2c1c]/40">3:05</span>
+              <button class="text-[#3e2c1c]/40 hover:text-[#b85c38] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="flex items-center gap-4 px-4 py-3 hover:bg-[#3e2c1c]/5 cursor-pointer transition border-b border-[#3e2c1c]/8">
+              <span class="text-xs font-bold text-[#3e2c1c]/40 w-6 text-center">05</span>
+              <img src="https://picsum.photos/60/64" class="w-12 h-12 rounded img-vintage flex-shrink-0" alt="">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">What A Wonderful World</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">Louis Armstrong</p>
+              </div>
+              <div class="hidden md:block text-xs text-[#3e2c1c]/40 w-32 truncate">Satchmo Sings</div>
+              <span class="text-xs text-[#3e2c1c]/40">2:21</span>
+              <button class="text-[#3e2c1c]/40 hover:text-[#b85c38] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="flex items-center gap-4 px-4 py-3 hover:bg-[#3e2c1c]/5 cursor-pointer transition">
+              <span class="text-xs font-bold text-[#3e2c1c]/40 w-6 text-center">06</span>
+              <img src="https://picsum.photos/60/65" class="w-12 h-12 rounded img-vintage flex-shrink-0" alt="">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">At Last</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">Etta James</p>
+              </div>
+              <div class="hidden md:block text-xs text-[#3e2c1c]/40 w-32 truncate">At Last!</div>
+              <span class="text-xs text-[#3e2c1c]/40">3:00</span>
+              <button class="text-[#3e2c1c]/40 hover:text-[#b85c38] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== FEATURED ALBUMS GRID ===== -->
+        <section class="mb-10">
+          <div class="flex items-center justify-between mb-5">
+            <h3 class="font-display text-2xl font-bold text-[#3e2c1c]">From the Crate</h3>
+            <div class="flex items-center gap-4 text-xs">
+              <button class="tab-active font-bold tracking-wider uppercase pb-1">All</button>
+              <button class="text-[#3e2c1c]/40 font-bold tracking-wider uppercase pb-1 hover:text-[#b85c38] transition">Jazz</button>
+              <button class="text-[#3e2c1c]/40 font-bold tracking-wider uppercase pb-1 hover:text-[#b85c38] transition">Soul</button>
+              <button class="text-[#3e2c1c]/40 font-bold tracking-wider uppercase pb-1 hover:text-[#b85c38] transition">Blues</button>
+              <button class="text-[#3e2c1c]/40 font-bold tracking-wider uppercase pb-1 hover:text-[#b85c38] transition">Country</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <!-- Album 1 -->
+            <a class="cursor-pointer group">
+              <div class="relative rounded-lg overflow-hidden card-paper">
+                <img src="https://picsum.photos/250/250" class="w-full aspect-square object-cover img-vintage" alt="">
+                <div class="absolute top-2 right-2 badge-gold text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">New</div>
+              </div>
+              <div class="mt-2">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Autumn Leaves</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">Billie Holiday</p>
+              </div>
+            </a>
+            <!-- Album 2 -->
+            <a class="cursor-pointer group">
+              <div class="relative rounded-lg overflow-hidden card-paper">
+                <img src="https://picsum.photos/250/251" class="w-full aspect-square object-cover img-vintage" alt="">
+              </div>
+              <div class="mt-2">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Blue Train</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">John Coltrane</p>
+              </div>
+            </a>
+            <!-- Album 3 -->
+            <a class="cursor-pointer group">
+              <div class="relative rounded-lg overflow-hidden card-paper">
+                <img src="https://picsum.photos/250/252" class="w-full aspect-square object-cover img-vintage" alt="">
+              </div>
+              <div class="mt-2">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Kind of Blue</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">Miles Davis</p>
+              </div>
+            </a>
+            <!-- Album 4 -->
+            <a class="cursor-pointer group">
+              <div class="relative rounded-lg overflow-hidden card-paper">
+                <img src="https://picsum.photos/250/253" class="w-full aspect-square object-cover img-vintage" alt="">
+              </div>
+              <div class="mt-2">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">A Love Supreme</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">John Coltrane</p>
+              </div>
+            </a>
+            <!-- Album 5 -->
+            <a class="cursor-pointer group">
+              <div class="relative rounded-lg overflow-hidden card-paper">
+                <img src="https://picsum.photos/250/254" class="w-full aspect-square object-cover img-vintage" alt="">
+              </div>
+              <div class="mt-2">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Lady Sings</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">Billie Holiday</p>
+              </div>
+            </a>
+            <!-- Album 6 -->
+            <a class="cursor-pointer group">
+              <div class="relative rounded-lg overflow-hidden card-paper">
+                <img src="https://picsum.photos/250/255" class="w-full aspect-square object-cover img-vintage" alt="">
+              </div>
+              <div class="mt-2">
+                <p class="text-sm font-bold text-[#3e2c1c] truncate">Time Out</p>
+                <p class="text-xs text-[#3e2c1c]/50 truncate">Dave Brubeck</p>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <!-- ===== TOP ARTISTS ===== -->
+        <section class="mb-10">
+          <div class="flex items-center justify-between mb-5">
+            <h3 class="font-display text-2xl font-bold text-[#3e2c1c]">Legends on Vinyl</h3>
+            <a class="text-xs tracking-wider uppercase text-[#b85c38] font-bold hover:underline cursor-pointer">View All</a>
+          </div>
+          <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+            <a class="cursor-pointer text-center group">
+              <div class="relative w-24 h-24 mx-auto mb-2">
+                <img src="https://picsum.photos/200/200" class="w-24 h-24 rounded-full object-cover img-vintage border-4 border-[#c9a227] group-hover:border-[#b85c38] transition" alt="">
+              </div>
+              <p class="text-xs font-bold text-[#3e2c1c]">Miles Davis</p>
+              <p class="text-[10px] text-[#3e2c1c]/50">Jazz</p>
+            </a>
+            <a class="cursor-pointer text-center group">
+              <div class="relative w-24 h-24 mx-auto mb-2">
+                <img src="https://picsum.photos/200/201" class="w-24 h-24 rounded-full object-cover img-vintage border-4 border-[#c9a227] group-hover:border-[#b85c38] transition" alt="">
+              </div>
+              <p class="text-xs font-bold text-[#3e2c1c]">Nina Simone</p>
+              <p class="text-[10px] text-[#3e2c1c]/50">Soul · Jazz</p>
+            </a>
+            <a class="cursor-pointer text-center group">
+              <div class="relative w-24 h-24 mx-auto mb-2">
+                <img src="https://picsum.photos/200/202" class="w-24 h-24 rounded-full object-cover img-vintage border-4 border-[#c9a227] group-hover:border-[#b85c38] transition" alt="">
+              </div>
+              <p class="text-xs font-bold text-[#3e2c1c]">Ray Charles</p>
+              <p class="text-[10px] text-[#3e2c1c]/50">Soul · R&B</p>
+            </a>
+            <a class="cursor-pointer text-center group">
+              <div class="relative w-24 h-24 mx-auto mb-2">
+                <img src="https://picsum.photos/200/203" class="w-24 h-24 rounded-full object-cover img-vintage border-4 border-[#c9a227] group-hover:border-[#b85c38] transition" alt="">
+              </div>
+              <p class="text-xs font-bold text-[#3e2c1c]">Ella Fitzgerald</p>
+              <p class="text-[10px] text-[#3e2c1c]/50">Jazz</p>
+            </a>
+            <a class="cursor-pointer text-center group">
+              <div class="relative w-24 h-24 mx-auto mb-2">
+                <img src="https://picsum.photos/200/204" class="w-24 h-24 rounded-full object-cover img-vintage border-4 border-[#c9a227] group-hover:border-[#b85c38] transition" alt="">
+              </div>
+              <p class="text-xs font-bold text-[#3e2c1c]">Johnny Cash</p>
+              <p class="text-[10px] text-[#3e2c1c]/50">Country</p>
+            </a>
+            <a class="cursor-pointer text-center group">
+              <div class="relative w-24 h-24 mx-auto mb-2">
+                <img src="https://picsum.photos/200/205" class="w-24 h-24 rounded-full object-cover img-vintage border-4 border-[#c9a227] group-hover:border-[#b85c38] transition" alt="">
+              </div>
+              <p class="text-xs font-bold text-[#3e2c1c]">Sam Cooke</p>
+              <p class="text-[10px] text-[#3e2c1c]/50">Soul</p>
+            </a>
+          </div>
+        </section>
+
+        <div class="text-center py-6">
+          <p class="text-[10px] tracking-[0.3em] uppercase text-[#3e2c1c]/30">Vinyl · Side A · Track 1 — End of Record</p>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ NOW PLAYING BAR ============ -->
+  <footer class="fixed bottom-0 left-0 right-0 bg-[#3e2c1c] text-[#f5ecd9] px-4 py-3 shadow-2xl z-30">
+    <div class="flex items-center gap-4 max-w-[1800px] mx-auto">
+
+      <!-- Track Info -->
+      <div class="flex items-center gap-3 w-64 flex-shrink-0">
+        <div class="relative">
+          <img src="https://picsum.photos/80/80" class="w-12 h-12 rounded img-vintage border border-[#c9a227]/30" alt="">
+        </div>
+        <div class="min-w-0">
+          <p class="text-sm font-bold truncate">Fly Me To The Moon</p>
+          <p class="text-xs text-[#d4b896]/70 truncate">Frank Sinatra — Sinatra Sings</p>
+        </div>
+        <button class="text-[#d4b896] hover:text-[#c9a227] transition flex-shrink-0">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        </button>
+      </div>
+
+      <!-- Controls + Progress -->
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="flex items-center gap-5">
+          <button class="text-[#d4b896] hover:text-[#c9a227] transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </button>
+          <button class="text-[#d4b896] hover:text-[#c9a227] transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+          </button>
+          <!-- Play button -->
+          <button class="w-10 h-10 rounded-full bg-[#f5ecd9] text-[#3e2c1c] hover:bg-[#c9a227] transition flex items-center justify-center">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button class="text-[#d4b896] hover:text-[#c9a227] transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16 6h2v12h-2zm-3.5 6L4 6v12z"/></svg>
+          </button>
+          <button class="text-[#d4b896] hover:text-[#c9a227] transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </button>
+        </div>
+        <div class="w-full flex items-center gap-2">
+          <span class="text-[10px] text-[#d4b896]/60 w-8 text-right">1:12</span>
+          <input type="range" min="0" max="100" value="48" class="flex-1 max-w-md">
+          <span class="text-[10px] text-[#d4b896]/60 w-8">2:28</span>
+        </div>
+      </div>
+
+      <!-- Right Side: Vinyl + Volume -->
+      <div class="flex items-center gap-4 w-64 flex-shrink-0 justify-end">
+        <!-- Spinning vinyl -->
+        <div class="hidden md:flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-[#1a1410] border border-[#c9a227]/30 flex items-center justify-center vinyl-spin">
+            <div class="w-1.5 h-1.5 rounded-full bg-[#b85c38]"></div>
+          </div>
+        </div>
+        <button class="text-[#d4b896] hover:text-[#c9a227] transition hidden sm:block">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        </button>
+        <input type="range" min="0" max="100" value="70" class="w-20 hidden sm:block">
+        <button class="text-[#d4b896] hover:text-[#c9a227] transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Spacer for fixed footer -->
+  <div style="height: 80px;"></div>
+
+</body>
+</html>
